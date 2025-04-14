@@ -34,7 +34,7 @@ export default function Selections() {
   const handlePostData = async () => {
     try {
       const response = await fetch(
-        "https://homeapp.pages.dev/api/postTransactions",
+        "https://expensetracker.harrisviewcodes.uk/api/postTransactions",
         {
           method: "POST",
           headers: {
