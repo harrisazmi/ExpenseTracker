@@ -38,7 +38,7 @@ export default function MainPage() {
         const data: TransactionArray[] = await response.json(); // Expect an array of transactions
         setTransactions(data); // Set the fetched transactions array to state
         setLoading(false);
-        console.log(data)
+        console.log(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         setLoading(false);
@@ -60,48 +60,53 @@ export default function MainPage() {
   return (
     <div className="p-6 bg-white space-y-6 items-center flex flex-col">
       <Selections />
-
-      <div>
-        <h1 className=" min-w-[450px] flex text-2xl font-bold p-4 border border-gray-200 bg-gray-50 text-gray-800 rounded-t-lg items-center justify-between">
-          <div>Transactions</div>
+      <div className="w-full">
+        <h1 className="min-w-[300px] w-full bg-white flex text-2xl font-bold p-4 border border-gray-200 text-gray-800 rounded-t-lg items-center justify-between">
+          <div className="pr-2">Transactions</div>
           <Switch checked={isVisible} onCheckedChange={setIsVisible} />
         </h1>
         {isVisible && (
-          <div className="border border-gray-200 rounded-b-lg shadow-sm max-w-md flex justify-center items-center">
-            <div className="divide-y divide-gray-100">
-              {transactions.map((transaction) => (
-                <div
-                  key={transaction._id}
-                  className="p-4 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="font-medium text-gray-600">Category:</div>
-                    <div>{transaction.category}</div>
-
-                    <div className="font-medium text-gray-600">Remarks:</div>
-                    <div>{transaction.remarks}</div>
-
-                    <div className="font-medium text-gray-600">Amount:</div>
-                    <div className="text-green-600 font-semibold">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+            {transactions.map((transaction) => (
+              <div
+                key={transaction._id}
+                className="p-4  border border-gray-200 shadow-sm hover:shadow-md hover:bg-gray-50 transition-all"
+              >
+                <div className="flex flex-col gap-3 text-sm text-gray-700">
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium text-gray-500">Category:</span>
+                    <span className="text-right">{transaction.category}</span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium text-gray-500">Remarks:</span>
+                    <span className="text-right truncate max-w-[180px]">
+                      {transaction.remarks}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium text-gray-500">Amount:</span>
+                    <span className="text-green-600 font-semibold">
                       RM {transaction.expenses}
-                    </div>
-
-                    <div className="font-medium text-gray-600">Date:</div>
-                    <div>{transaction.date}</div>
-
-                    <div className="font-medium text-gray-600">ID:</div>
-                    <div className="text-gray-500 text-xs">
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium text-gray-500">Date:</span>
+                    <span className="text-right">{transaction.date}</span>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="font-medium text-gray-500">ID:</span>
+                    <span className="text-xs text-gray-400 truncate max-w-[180px]">
                       {transaction._id}
-                    </div>
+                    </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
-      <div className="border border-gray-200 min-w-[800px] rounded-lg shadow-sm">
+      <div className="border border-gray-200 w-full rounded-lg shadow-sm items-center justify-center flex flex-col">
         <BudgetInputMoneyChart transactions={transactions} />
         <BudgetTotalChart transactions={transactions} />
         <BudgetFoodChart transactions={transactions} />

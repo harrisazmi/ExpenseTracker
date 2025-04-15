@@ -1,7 +1,9 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 import { Switch } from "../ui/Switch";
+import CategoryFeedPieChart from "../componentSplit/CategoryFeedPieChart";
+import HeaderSwitch from "../componentSplit/HeaderSwitch";
 
 interface Transaction {
   _id: string;
@@ -82,100 +84,42 @@ export default function BudgetForceSavingChart({ transactions = [] }: Props) {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 
   return (
-    <div className="w-full justify-center">
-      <div className="p-4 bg-gray-50 border font-semibold text-gray-800 justify-between items-center flex">
-        ForceSavings Used / Total Budget ForceSavings
-        <div className="flex items-center space-x-2">
-          <span>Show Details</span>
-          <Switch checked={isVisible} onCheckedChange={setIsVisible} />
-        </div>
-      </div>
+    <div className="w-full  min-w-[300px]  justify-center">
+      <HeaderSwitch
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        title={"Force Savings Used / Total Budget Force Savings"}
+      ></HeaderSwitch>
       {isVisible && (
         <>
-          <div className="flex">
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedMain}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${(
-                    (value / totalValueForceSavingsBudget) *
-                    100
-                  ).toFixed(0)}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedMain.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+          <div className="flex max-sm:flex-col items-center gap-4 py-4 justify-center w-full bg-white border border-gray-200">
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedMain}
+              totalValue={totalValueForceSavingsBudget}
+            ></CategoryFeedPieChart>
 
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedAll}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${(
-                    (value / totalValueForceSavingsBudget) *
-                    100
-                  ).toFixed(0)}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedAll.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedAll}
+              totalValue={totalValueForceSavingsBudget}
+            ></CategoryFeedPieChart>
           </div>
 
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total ForceSavings Used is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueForceSavingsUsed.toFixed(2)}
+              RM {(totalValueForceSavingsUsed ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total Budget ForceSavings is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueForceSavingsBudget.toFixed(2)}
+              RM {(totalValueForceSavingsBudget ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total Budget ForceSavings Leftover is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueForceSavingsBudgetLeftover.toFixed(2)}
+              RM {(totalValueForceSavingsBudgetLeftover ?? 0).toFixed(2)}
             </div>
           </div>
         </>

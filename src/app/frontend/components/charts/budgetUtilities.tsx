@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import React, { useState } from "react";
-import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 import { Switch } from "../ui/Switch";
+import CategoryFeedPieChart from "../componentSplit/CategoryFeedPieChart";
+import HeaderSwitch from "../componentSplit/HeaderSwitch";
 
 interface Transaction {
   _id: string;
@@ -94,109 +95,50 @@ export default function BudgetUtilitiesChart({ transactions = [] }: Props) {
     ...categoryBFeedAllAdd,
   ];
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
-
   return (
-    <div className="w-full justify-center">
-      <div className="p-4 bg-gray-50 border font-semibold text-gray-800 justify-between items-center flex">
-        Utilities Used / Total Budget Utilities
-        <div className="flex items-center space-x-2">
-          <span>Show Details</span>
-          <Switch checked={isVisible} onCheckedChange={setIsVisible} />
-        </div>
-      </div>
+    <div className="w-full justify-center  min-w-[300px] ">
+      <HeaderSwitch
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        title={"Utilities Used / Total Budget Utilities"}
+      ></HeaderSwitch>
+
       {isVisible && (
         <>
-          <div className="flex">
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedMain}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${(
-                    (value / totalValueUtilitiesBudget) *
-                    100
-                  ).toFixed(0)}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedMain.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+          <div className="flex max-sm:flex-col items-center gap-4 py-4 justify-center w-full bg-white border border-gray-200">
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedMain}
+              totalValue={totalValueUtilitiesBudget}
+            ></CategoryFeedPieChart>
 
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedAll}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${(
-                    (value / totalValueUtilitiesBudget) *
-                    100
-                  ).toFixed(0)}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedAll.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedAll}
+              totalValue={totalValueUtilitiesBudget}
+            ></CategoryFeedPieChart>
           </div>
 
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border bg-white">
             Total Utilities Used is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueUtilitiesUsed.toFixed(2)}
+              RM {(totalValueUtilitiesUsed ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border bg-white">
             Total Budget Utilities is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueUtilitiesBudget.toFixed(2)}
+              RM {(totalValueUtilitiesBudget ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center max-sm:flex-col justify-center p-2 font-semibold border bg-white">
             Total Budget Utilities Leftover is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueUtilitiesBudgetLeftover.toFixed(2)}
+              RM {(totalValueUtilitiesBudgetLeftover ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex max-sm:flex-col items-center justify-center p-2 font-semibold border bg-white">
             Utilities Leftover is&nbsp;
             <div className="text-blue-500">
-              | {utilitiesLeftover.join(" | ")} |
+              | {(utilitiesLeftover ?? []).join(" | ")} |
             </div>
           </div>
         </>

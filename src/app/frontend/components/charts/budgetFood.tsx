@@ -1,7 +1,9 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 import { Switch } from "../ui/Switch";
+import CategoryFeedPieChart from "../componentSplit/CategoryFeedPieChart";
+import HeaderSwitch from "../componentSplit/HeaderSwitch";
 
 interface Transaction {
   _id: string;
@@ -82,98 +84,42 @@ export default function BudgetFoodChart({ transactions = [] }: Props) {
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
 
   return (
-    <div className="w-full justify-center">
-      <div className="p-4 bg-gray-50 border font-semibold text-gray-800 justify-between items-center flex">
-        Foods Used / Total Budget Foods
-        <div className="flex items-center space-x-2">
-          <span>Show Details</span>
-          <Switch checked={isVisible} onCheckedChange={setIsVisible} />
-        </div>
-      </div>
+    <div className="w-full  min-w-[300px]  justify-center">
+      <HeaderSwitch
+        isVisible={isVisible}
+        setIsVisible={setIsVisible}
+        title={"Foods Used / Total Budget Foods"}
+      ></HeaderSwitch>
       {isVisible && (
         <>
-          <div className="flex">
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedMain}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${((value / totalValueFoodsBudget) * 100).toFixed(
-                    0
-                  )}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedMain.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+          <div className="flex max-sm:flex-col items-center gap-4 py-4 justify-center w-full bg-white border border-gray-200">
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedMain}
+              totalValue={totalValueFoodsBudget}
+            ></CategoryFeedPieChart>
 
-            <PieChart width={800} height={700}>
-              <Pie
-                data={dataCategoryCFeedAll}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={({ name, value }) =>
-                  `${name} (${((value / totalValueFoodsBudget) * 100).toFixed(
-                    0
-                  )}%)`
-                }
-                outerRadius={150}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {dataCategoryCFeedAll.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: number) =>
-                  `RM ${value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                  })}`
-                }
-              />
-              <Legend />
-            </PieChart>
+            <CategoryFeedPieChart
+              dataCategoryFeed={dataCategoryCFeedAll}
+              totalValue={totalValueFoodsBudget}
+            ></CategoryFeedPieChart>
           </div>
 
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total Foods Used is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueFoodsUsed.toFixed(2)}
+              RM {(totalValueFoodsUsed ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total Budget Foods is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueFoodsBudget.toFixed(2)}
+              RM {(totalValueFoodsBudget ?? 0).toFixed(2)}
             </div>
           </div>
-          <div className=" flex items-center justify-center p-2 font-semibold border">
+          <div className="flex items-center justify-center p-2 font-semibold border">
             Total Budget Foods Leftover is&nbsp;
             <div className="text-blue-500">
-              RM {totalValueFoodsBudgetLeftover.toFixed(2)}
+              RM {(totalValueFoodsBudgetLeftover ?? 0).toFixed(2)}
             </div>
           </div>
         </>
